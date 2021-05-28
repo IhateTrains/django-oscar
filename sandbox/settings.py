@@ -2,15 +2,13 @@ import os
 import environ
 import oscar
 
-env = environ.Env()
-
 # Path helper
 location = lambda x: os.path.join(
     os.path.dirname(os.path.realpath(__file__)), x)
 
-DEBUG = env.bool('DEBUG', default=True)
+DEBUG = True
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
+ALLOWED_HOSTS = []
 
 EMAIL_SUBJECT_PREFIX = '[Oscar sandbox] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -28,9 +26,6 @@ DATABASES = {
     }
 }
 
-CACHES = {
-    'default': env.cache(default='locmemcache://'),
-}
 
 
 # Local time zone for this installation. Choices can be found here:
@@ -109,7 +104,7 @@ STATICFILES_FINDERS = (
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = env.str('SECRET_KEY', default='UajFCuyjDKmWHe29neauXzHi9eZoRXr6RMbT5JyAdPiACBP6Cra2')
+SECRET_KEY = 'UajFCuyjDKmWHe29neauXzHi9eZoRXr6RMbT5JyAdPiACBP6Cra2'
 
 TEMPLATES = [
     {
@@ -240,11 +235,6 @@ LOGGING = {
             'handlers': ['console'],
             'propagate': False,
         },
-        'sorl.thumbnail': {
-            'handlers': ['console'],
-            'propagate': True,
-            'level': 'INFO',
-        },
     }
 }
 
@@ -259,12 +249,13 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
 
+    'catalogue',
+
     'oscar.config.Shop',
     'oscar.apps.analytics.apps.AnalyticsConfig',
     'oscar.apps.checkout.apps.CheckoutConfig',
     'oscar.apps.address.apps.AddressConfig',
     'oscar.apps.shipping.apps.ShippingConfig',
-    'oscar.apps.catalogue.apps.CatalogueConfig',
     'oscar.apps.catalogue.reviews.apps.CatalogueReviewsConfig',
     'oscar.apps.communication.apps.CommunicationConfig',
     'oscar.apps.partner.apps.PartnerConfig',
@@ -294,7 +285,6 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'haystack',
     'treebeard',
-    'sorl.thumbnail',
     'easy_thumbnails',
     'django_tables2',
 
@@ -401,15 +391,8 @@ OSCAR_ORDER_STATUS_CASCADE = {
     'Complete': 'Shipped',
 }
 
-# Sorl
-# ====
 
-THUMBNAIL_DEBUG = DEBUG
-THUMBNAIL_KEY_PREFIX = 'oscar-sandbox'
-THUMBNAIL_KVSTORE = env(
-    'THUMBNAIL_KVSTORE',
-    default='sorl.thumbnail.kvstores.cached_db_kvstore.KVStore')
-THUMBNAIL_REDIS_URL = env('THUMBNAIL_REDIS_URL', default=None)
+OSCAR_THUMBNAILER = 'oscar.core.thumbnails.EasyThumbnails'
 
 
 # Django 1.6 has switched to JSON serializing for security reasons, but it does not
@@ -419,8 +402,8 @@ THUMBNAIL_REDIS_URL = env('THUMBNAIL_REDIS_URL', default=None)
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
 # Security
-SECURE_SSL_REDIRECT = env.bool('SECURE_SSL_REDIRECT', default=False)
-SECURE_HSTS_SECONDS = env.int('SECURE_HSTS_SECONDS', default=0)
+SECURE_SSL_REDIRECT =False
+SECURE_HSTS_SECONDS =0
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
 
